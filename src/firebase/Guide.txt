@@ -1,0 +1,241 @@
+getAuth from 'fb/auth' =>auth= getAuth(app) 
+
+createUserWithEmailAndPassword from 'fb/auth'
+ =>Create(auth,email,pass).then(
+(userCredential)=>{
+
+const user = userCredential.user
+
+}).catch((err)=>errr)
+
+
+sendEmailVerification()
+
+signInWithEmailAndPassword() from '/auth'
+
+signOut from '/auth'
+
+onAuthStateChanged from '/auth'
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/auth.user
+        const uid = user.uid
+        // ...
+    } else {
+        // User is signed out
+        // ...
+    }
+})
+
+
+GoogleAuthProvider from '/auth'
+signInWithPopup   from '/auth'
+signInWithPopupconst provider = new GoogleAuthProvider()
+signInWithPopup(auth,provider).then(
+        (result)=>{
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            const user = result.user;
+        }
+    ).catch(
+        (err)=>console.error(err.message)
+    )
+
+    
+updateProfile from '/auth'
+ updateProfile(auth.currentUser, {
+            displayName: "Jane Q. User",
+            photoURL: "https://example.com/jane-q-user/profile.jpg"
+        }).then(() => {
+        // Profile updated!
+        // ...
+        }).catch((error) => {
+        // An error occurred
+        // ...
+        })
+}
+
+
+const user = auth.currentUser (return current user's UID)
+
+{
+uid: user.uid,}
+
+Database:-
+
+getFirestore from '/firestore'
+
+db = getFirestore(app)
+
+
+{ collection } from '/firestore'
+
+coll = collection(db,'collection-name')
+
+
+	add a element:-
+
+addDoc from '/firestore'
+
+await addDoc(coll , {
+
+first:"SSS",
+...
+
+})
+
+.then((id)={
+	
+console.log(id)
+	
+}).catch()
+
+           "Create a own document"
+{doc,setDoc} from '/firestore'
+
+await setDoc(doc(db,'collection-name','document-name'),{
+
+ 
+first:"SSS",
+...
+
+})
+
+.then((id)={
+	
+console.log(id)
+	
+}).catch()
+
+
+    		"Server TimeStamp"
+
+serverTimestamp from '/firestore'
+
+{
+createdAt: serverTimestamp() }
+
+
+		"Retrive data "
+getDoc from '/firestore'
+
+ const querySnapshot = await getDocs(coll)
+    
+    querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data())
+    })
+}
+
+		"fetchInRealtimeAndRenderPostsFromDB"
+
+onSnapshot from '/firestore'
+
+onSnapshot(coll, (querySnapshot)=>{
+
+
+})
+
+
+		"Security Rules"
+
+1. ONly Authenticated Users
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+	  allow read, write: if request.auth != null;
+    }
+  }
+}
+
+2.read a data based on users
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+	    allow write: if request.auth != null;
+      allow read: if request.auth != null && request.auth.uid == resource.data.uid;
+    }
+  }
+} 
+
+3.Update the data beased on users
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function userIsAuthorOfPost() {
+      return request.auth.uid == resource.data.uid;
+    }
+    
+    match /{document=**} {
+	    allow create: if isSignedIn();
+      allow update: if isSignedIn() && userIsAuthorOfPost();
+      allow read: if isSignedIn() && userIsAuthorOfPost();
+    }
+  }
+}
+
+4.Delete based on Users
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function userIsAuthorOfPost() {
+      return request.auth.uid == resource.data.uid;
+    }
+    
+    match /{document=**} {
+	 allow create: if isSignedIn();
+      allow read: if isSignedIn() && userIsAuthorOfPost();
+      allow update: if isSignedIn() && userIsAuthorOfPost();
+      allow delete: if isSignedIn() && userIsAuthorOfPost();
+    }
+  }
+}
+
+		"Queries"
+
+query , where fro '/firestore'
+
+const q = query(coll, where("uid", "==", user.uid))
+
+
+              "OrderBY"
+
+orderBy from '/firestore'
+
+const q = query(postsRef, where("uid", "==", user.uid), orderBy("createdAt", "desc"))
+
+
+		"updateDoc" 
+updateDoc from '/firestore'
+
+async function updatePostInDB(docId, newBody) {
+    const postRef = doc(db, collectionName, docId);
+
+    await updateDoc(postRef, {
+        body: newBody
+    })
+}
+
+		"delete a Docs"
+
+deleteDoc from '/firebase'
+
+async function deletePostFromDB(docId) {
+    await deleteDoc(doc(db, collectionName, docId))
+}

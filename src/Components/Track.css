@@ -1,0 +1,37 @@
+/* Track.css */
+.track-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.track-header {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.track-nav {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.track-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.track-button.active {
+  background-color: #00ff51;
+}
+
+.track-button:hover {
+  background-color: #00ff51;
+}
+
+/* Add more styling for your application tables as needed */

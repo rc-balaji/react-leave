@@ -1,0 +1,68 @@
+/* ApplyForLeave.css */
+
+/* Container for the entire component */
+.apply-for-leave-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+/* Styling for the header */
+.apply-for-leave-header {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* Styling for the leave form */
+.leave-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for form input fields and labels */
+.leave-info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="date"],
+select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex: 1;
+}
+
+/* Styling for the submit button */
+.submit-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+/* Styling for the remaining days */
+.leave-info-row:last-child {
+  margin-top: 20px;
+  font-weight: bold;
+}

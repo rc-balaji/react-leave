@@ -1,0 +1,92 @@
+/* Styling for the leave applications table */
+.leave-applications {
+  margin-top: 20px;
+}
+
+/* Styling for the table container */
+.table-container {
+  width: fit-content;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Styling for the table header */
+table {
+  border: 1px solid black;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Styling for the table header row */
+thead {
+  background-color: #ff0000;
+  border: #000000;
+  color: #000000;
+}
+
+/* Styling for table header cells */
+th {
+  text-align: left;
+  padding: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 14px;
+  border-bottom: 2px solid #ff0000;
+}
+
+/* Styling for table body rows */
+tr {
+  text-align: left;
+  background-color: #fff;
+  transition: background-color 0.2s;
+}
+
+/* Styling for alternating rows */
+
+/* Hover effect on table rows */
+tr:hover {
+  background-color: #f0f0f0;
+}
+
+/* Styling for table data cells */
+td {
+  text-align: left;
+  padding: 12px;
+  font-size: 14px;
+  /* border-bottom: 1px solid #e0e0e0; */
+}
+
+/* Styling for the status cell */
+td.status {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Styling for the No. of Days Remaining */
+.remaining-days {
+  margin: 10px 0;
+  font-size: 18px;
+  text-align: right;
+}
+
+/* Styling for pending leave application rows */
+tr.pending {
+  background-color: lightyellow;
+}
+
+/* Styling for approved leave application rows */
+tr.approved {
+  background-color: lightgreen;
+}
+
+/* Styling for declined leave application rows */
+tr.declined {
+  background-color: lightcoral;
+}
+
+/* Styling for canceled leave application rows */
+tr.canceled {
+  background-color: lightsalmon;
+}

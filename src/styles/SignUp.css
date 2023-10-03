@@ -1,0 +1,64 @@
+/* SignUp.css (Create a new CSS file called SignUp.css) */
+
+.signup-container {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .signup-header {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .signup-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .signup-button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .signup-button:hover {
+    background-color: #45a049;
+  }
+  
+  .signin-link {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  
+  .signin-link button {
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .signin-link button:hover {
+    text-decoration: none;
+  }
+  
