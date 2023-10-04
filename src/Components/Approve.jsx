@@ -162,7 +162,7 @@ export default function Approve() {
             <table style={styles.table}>
               <thead>
                 <tr>
-                  <th style={styles.th}>S.no</th>
+                  {/* <th style={styles.th}>S.no</th> */}
                   <th style={styles.th}>Apply Date</th>
                   <th style={styles.th}>Subject</th>
                   <th style={styles.th}>From</th>
@@ -183,7 +183,7 @@ export default function Approve() {
                             : {}
                         }
                       >
-                        <td style={styles.td}>{index + 1}</td>
+                        {/* <td style={styles.td}>{index + 1}</td> */}
                         <td style={styles.td}>{application.appliedDate}</td>
                         <td style={styles.td}>{application.subject}</td>
                         <td style={styles.td}>

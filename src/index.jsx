@@ -39,7 +39,10 @@ export function Index() {
   };
 
   return (
-    <div className="signin-container">
+    <div
+      className="signin-container"
+      style={{ marginLeft: 550, marginTop: 150 }}
+    >
       <div className="signin-header-container">
         <h1 className="signin-header">Sign In</h1>
         <p className="signin-subheader">

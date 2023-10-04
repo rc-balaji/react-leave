@@ -160,7 +160,7 @@ export default function All() {
             <table style={styles.table}>
               <thead>
                 <tr>
-                  <th style={styles.th}>S.no</th>
+                  {/* <th style={styles.th}>S.no</th> */}
                   <th style={styles.th}>Apply Date</th>
                   <th style={styles.th}>Subject</th>
                   <th style={styles.th}>From</th>
@@ -172,7 +172,7 @@ export default function All() {
                 {leaveApplications.map((application, index) =>
                   application.userId === user.uid ? (
                     <tr key={application.id}>
-                      <td style={styles.td}>{index + 1}</td>
+                      {/* <td style={styles.td}>{index + 1}</td> */}
                       <td style={styles.td}>{application.appliedDate}</td>
                       <td style={styles.td}>{application.subject}</td>
                       <td style={styles.td}>
