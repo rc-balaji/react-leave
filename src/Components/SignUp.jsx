@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firestore"; // Import Firestore
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  doc,
+  setDoc,
+  getDoc,
+} from "firebase/firestore";
 
 import { useNavigate } from "react-router-dom";
 import "../styles/SignUp.css"; // Import the CSS file
@@ -13,6 +19,31 @@ export function SignUp() {
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
   const [reConfirmPassword, setReConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false); // Add a loading state
+  const [userDocRef, setUserDocRef] = useState(null);
+
+  const [uid, setUID] = useState("");
+  useEffect(() => {
+    // Add a listener to watch for changes in the authentication state
+    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
+      if (currentUser) {
+        // User is signed in
+        const userId = currentUser.uid;
+        // Get Firestore instance
+        setUID(userId);
+        const db = getFirestore();
+        // Define the Firestore document reference with the custom user ID
+        const docRef = doc(db, "faculty", userId);
+        setUserDocRef(docRef);
+      } else {
+        // No user is signed in
+        setUserDocRef(null);
+      }
+    });
+
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe();
+  }, []);
 
   const Create = async (e) => {
     e.preventDefault();
@@ -24,6 +55,9 @@ export function SignUp() {
     }
 
     try {
+      // Set the loading state to true
+      setLoading(true);
+
       // Create user authentication
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -31,28 +65,26 @@ export function SignUp() {
         pass
       );
 
-      // Get the unique user ID
-      const userId = userCredential.user.uid;
-
-      // Get Firestore instance
-      const db = getFirestore();
-
-      // Define the Firestore collection reference
-      const userCollection = collection(db, "faculty");
-
-      // Create a new document with a unique ID
-      await addDoc(userCollection, {
-        userId: userId, // Add the user ID to the document
-        name: name,
-        department: department,
-        email: userCredential.user.email,
-        remainingLeaves: 10,
-      });
-
-      alert("Account created successfully");
-      navigate("/");
+      if (userDocRef) {
+        // Set data in the document with the custom user ID
+        await setDoc(userDocRef, {
+          name: name,
+          department: department,
+          email: userCredential.user.email,
+          remainingLeaves: 10,
+          userId: uid,
+        })
+          .then(() => {
+            alert("Account created successfully");
+            navigate("/");
+          })
+          .catch((err) => console.error(err));
+      }
     } catch (err) {
       alert(err.message);
+    } finally {
+      // Set the loading state back to false
+      setLoading(false);
     }
   };
 
@@ -90,7 +122,12 @@ export function SignUp() {
           onChange={(e) => setReConfirmPassword(e.target.value)}
           required
         />
-        <input type="submit" value="Sign Up" className="signup-button" />
+        {/* Display a loading spinner when loading is true */}
+        {loading ? (
+          <div className="loading-spinner">Loading...</div>
+        ) : (
+          <input type="submit" value="Sign Up" className="signup-button" />
+        )}
       </form>
       <p className="signin-link">
         Already have an account?{" "}

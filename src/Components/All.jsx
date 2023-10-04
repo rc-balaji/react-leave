@@ -48,23 +48,22 @@ export default function All() {
 
   // Function to convert Firestore Timestamp to formatted date and time string
   const formatFirestoreTimestamp = (timestamp) => {
-  if (!timestamp) {
-    return ""; // Return an empty string or another appropriate value when timestamp is null
-  }
+    if (!timestamp) {
+      return ""; // Return an empty string or another appropriate value when timestamp is null
+    }
 
-  const date = timestamp.toDate();
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    timeZoneName: "short",
+    const date = timestamp.toDate();
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      timeZoneName: "short",
+    };
+    return date.toLocaleDateString("en-US", options);
   };
-  return date.toLocaleDateString("en-US", options);
-};
-
 
   useEffect(() => {
     // Listen for changes in authentication state
@@ -124,27 +123,27 @@ export default function All() {
     fetchData();
   }, [leavesCollection, user]);
 
-//   useEffect(() => {
-//     // Fetch the user's remaining leaves count and update "No. of Days Remaining"
-//     const fetchRemainingLeaves = async () => {
-//       if (!user) return;
+  //   useEffect(() => {
+  //     // Fetch the user's remaining leaves count and update "No. of Days Remaining"
+  //     const fetchRemainingLeaves = async () => {
+  //       if (!user) return;
 
-//       try {
-//         const leavesRef = doc(db, "faculty", user.uid);
-//         const docSnapshot = await getDoc(leavesRef);
+  //       try {
+  //         const leavesRef = doc(db, "faculty", user.uid);
+  //         const docSnapshot = await getDoc(leavesRef);
 
-//         if (docSnapshot.exists()) {
-//           const userData = docSnapshot.data();
-//           const remainingLeaves = userData.remainingLeaves;
-//           setRemainingDays(remainingLeaves);
-//         }
-//       } catch (error) {
-//         console.error("Error fetching remaining leaves:", error);
-//       }
-//     };
+  //         if (docSnapshot.exists()) {
+  //           const userData = docSnapshot.data();
+  //           const remainingLeaves = userData.remainingLeaves;
+  //           setRemainingDays(remainingLeaves);
+  //         }
+  //       } catch (error) {
+  //         console.error("Error fetching remaining leaves:", error);
+  //       }
+  //     };
 
-//     fetchRemainingLeaves();
-//   }, [db, user]);
+  //     fetchRemainingLeaves();
+  //   }, [db, user]);
 
   return (
     <div>
@@ -170,20 +169,24 @@ export default function All() {
                 </tr>
               </thead>
               <tbody>
-                {leaveApplications.map((application, index) => (
-                  <tr key={application.id}>
-                    <td style={styles.td}>{index + 1}</td>
-                    <td style={styles.td}>{application.appliedDate}</td>
-                    <td style={styles.td}>{application.subject}</td>
-                    <td style={styles.td}>
-                      {application.from.toLocaleDateString()}
-                    </td>
-                    <td style={styles.td}>
-                      {application.to.toLocaleDateString()}
-                    </td>
-                    <td style={styles.td}>{application.noOfDays}</td>
-                  </tr>
-                ))}
+                {leaveApplications.map((application, index) =>
+                  application.userId === user.uid ? (
+                    <tr key={application.id}>
+                      <td style={styles.td}>{index + 1}</td>
+                      <td style={styles.td}>{application.appliedDate}</td>
+                      <td style={styles.td}>{application.subject}</td>
+                      <td style={styles.td}>
+                        {application.from.toLocaleDateString()}
+                      </td>
+                      <td style={styles.td}>
+                        {application.to.toLocaleDateString()}
+                      </td>
+                      <td style={styles.td}>{application.noOfDays}</td>
+                    </tr>
+                  ) : (
+                    ""
+                  )
+                )}
               </tbody>
             </table>
           )}

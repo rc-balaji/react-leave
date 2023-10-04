@@ -63,14 +63,14 @@ export const Home = () => {
 
     const fetchData = async () => {
       try {
-        // Create a query to retrieve leave applications, ordered by applied date
-        const q = query(
+        // Modify the query to retrieve data for the currently authenticated user
+        const leavesQuery = query(
           leavesCollection,
-          orderBy("timestamp", "desc") // Order by timestamp in descending order (latest first)
-          // Limit the results to the latest 10 applications
+          orderBy("timestamp", "desc"),
+          limit(10)
         );
 
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const unsubscribe = onSnapshot(leavesQuery, (querySnapshot) => {
           const applications = [];
           querySnapshot.forEach((doc) => {
             const data = doc.data();
@@ -147,7 +147,7 @@ export const Home = () => {
               </thead>
               <tbody>
                 {leaveApplications.map((application) =>
-                  user.uid === application.userId ? (
+                  application.userId === user.uid ? (
                     <tr
                       key={application.id}
                       className={

@@ -173,27 +173,31 @@ export default function Cancelled() {
               <tbody>
                 {leaveApplications
                   .filter((application) => application.status === "canceled")
-                  .map((application, index) => (
-                    <tr
-                      key={application.id}
-                      style={
-                        application.status === "canceled"
-                          ? styles.pendingRow
-                          : {}
-                      }
-                    >
-                      <td style={styles.td}>{index + 1}</td>
-                      <td style={styles.td}>{application.appliedDate}</td>
-                      <td style={styles.td}>{application.subject}</td>
-                      <td style={styles.td}>
-                        {application.from.toLocaleDateString()}
-                      </td>
-                      <td style={styles.td}>
-                        {application.to.toLocaleDateString()}
-                      </td>
-                      <td style={styles.td}>{application.noOfDays}</td>
-                    </tr>
-                  ))}
+                  .map((application, index) =>
+                    application.userId === user.uid ? (
+                      <tr
+                        key={application.id}
+                        style={
+                          application.status === "canceled"
+                            ? styles.pendingRow
+                            : {}
+                        }
+                      >
+                        <td style={styles.td}>{index + 1}</td>
+                        <td style={styles.td}>{application.appliedDate}</td>
+                        <td style={styles.td}>{application.subject}</td>
+                        <td style={styles.td}>
+                          {application.from.toLocaleDateString()}
+                        </td>
+                        <td style={styles.td}>
+                          {application.to.toLocaleDateString()}
+                        </td>
+                        <td style={styles.td}>{application.noOfDays}</td>
+                      </tr>
+                    ) : (
+                      ""
+                    )
+                  )}
               </tbody>
             </table>
           )}

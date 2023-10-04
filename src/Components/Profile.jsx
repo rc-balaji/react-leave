@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { auth } from "../firebase/firestore";
 import {
   getFirestore,
@@ -12,7 +12,8 @@ import { Navbar } from "./Navbar";
 
 export function Profile() {
   const [user, setUser] = useState(null);
-  const [facultyData, setFacultyData] = useState([]);
+  const [facultyData, setFacultyData] = useState({});
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     // Add a listener to watch for changes in the authentication state
@@ -24,15 +25,12 @@ export function Profile() {
       } else {
         // No user is signed in
         setUser(null);
-        setFacultyData([]); // Clear faculty data when no user is signed in
+        setFacultyData({});
+        setLoading(false); // Stop loading when there is no user
       }
     });
 
-    // Clean up the listener when the component unmounts
-    return () => unsubscribe();
-  }, []);
-
-  const fetchFacultyData = async (userId) => {
+     const fetchFacultyData = async (userId) => {
     try {
       const db = getFirestore();
       const facultyCollection = collection(db, "faculty");
@@ -40,11 +38,19 @@ export function Profile() {
       const q = query(facultyCollection, where("userId", "==", userId));
 
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const facultyList = [];
+        const facultyData = {};
+
         querySnapshot.forEach((doc) => {
-          facultyList.push({ id: doc.id, ...doc.data() });
+          facultyData.id = doc.id;
+          facultyData.name = doc.data().name;
+          facultyData.department = doc.data().department;
+          // Add other fields as needed
+
+          // Set loading to false since data retrieval is complete
+          setLoading(false);
         });
-        setFacultyData(facultyList);
+
+        setFacultyData(facultyData);
       });
 
       return () => {
@@ -54,7 +60,16 @@ export function Profile() {
       console.error("Error fetching faculty data:", error);
     }
   };
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe();
+    
+  }, []);
 
+  useEffect(()=>{
+    
+  },[]
+ 
+  )
   return (
     <div>
       <Navbar />
@@ -62,24 +77,22 @@ export function Profile() {
         <h2 className="profile-header">Profile</h2>
         {user ? (
           <div className="profile-card">
-            <div className="profile-info">
-              <h3>Personal Information</h3>
-              {facultyData.length > 0 ? (
-                <p>
-                  <strong>Name:</strong> {facultyData[0].name}
-                </p>
-              ) : (
-                <p>No faculty data found for this user.</p>
-              )}
-              {facultyData.length > 0 ? (
-                <p>
-                  <strong>Department:</strong> {facultyData[0].department}
-                </p>
-              ) : null}
-              <p>
-                <strong>Email:</strong> {user.email}
-              </p>
-            </div>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <>
+                <div className="profile-info">
+                  <h3>Personal Information</h3>
+                  <p>
+                    <strong>Name:</strong> {facultyData.name}
+                  </p>
+                  <p>
+                    <strong>Department:</strong> {facultyData.department}
+                  </p>
+                  {/* Add other fields as needed */}
+                </div>
+              </>
+            )}
           </div>
         ) : (
           <p>Please sign in to view your profile.</p>

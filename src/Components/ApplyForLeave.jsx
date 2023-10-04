@@ -11,16 +11,16 @@ import {
   where,
   getDoc,
   doc,
-  setDoc, // Import setDoc function
+  setDoc,
 } from "firebase/firestore";
 import "./ApplyForLeave.css"; // Import the CSS file
 import { auth } from "../firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 export const ApplyForLeave = () => {
-  const db = getFirestore(app);
-  const coll = collection(db, "leaves");
-  const user = auth.currentUser;
+  const [db, setDb] = useState(null);
+  const [coll, setColl] = useState(null);
+  const [userDocRef, setUserDocRef] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [subject, setSubject] = useState("");
   const [fromDate, setFromDate] = useState("");
@@ -30,18 +30,33 @@ export const ApplyForLeave = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        setCurrentUser(null);
-      }
-    });
+    const fetchData = async () => {
+      const firestore = getFirestore(app);
+      setDb(firestore);
 
-    return () => {
-      unsubscribe();
+      const leavesCollection = collection(firestore, "leaves");
+      setColl(leavesCollection);
+
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setCurrentUser(user);
+
+          // Configure Firestore document reference
+          const userId = user.uid;
+          const userRef = doc(firestore, "faculty", userId);
+          setUserDocRef(userRef);
+        } else {
+          setCurrentUser(null);
+        }
+      });
+
+      return () => {
+        unsubscribe();
+      };
     };
-  }, [auth]);
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (!fromDate || !toDate) return;
@@ -56,7 +71,7 @@ export const ApplyForLeave = () => {
   }, [fromDate, toDate]);
 
   const Submit = async () => {
-    if (!user || noOfDays <= 0) return;
+    if (!currentUser || noOfDays <= 0) return; // Check currentUser instead of user
 
     try {
       setLoading(true);
@@ -67,27 +82,27 @@ export const ApplyForLeave = () => {
         to: toDate,
         type: leaveType,
         noOfDays: noOfDays,
-        userId: user.uid,
+        userId: currentUser.uid, // Use currentUser.uid
         status: "pending",
         timestamp: serverTimestamp(),
       });
 
       // Update the remaining leaves count
-      const leavesRef = doc(db, "faculty", user.uid);
-
-      const docSnapshot = await getDoc(leavesRef);
+      const docSnapshot = await getDoc(userDocRef);
 
       if (docSnapshot.exists()) {
         // Document exists, update it
         const userData = docSnapshot.data();
         const updatedRemainingLeaves = userData.remainingLeaves - noOfDays;
 
-        await updateDoc(leavesRef, { remainingLeaves: updatedRemainingLeaves });
+        await updateDoc(userDocRef, {
+          remainingLeaves: updatedRemainingLeaves,
+        });
         console.log("Updated");
       } else {
         // Document doesn't exist, create it
-        await setDoc(leavesRef, {
-          userId: user.uid,
+        await setDoc(userDocRef, {
+          userId: currentUser.uid,
           remainingLeaves: 10 - noOfDays, // Assuming an initial count of 10
         });
         console.log("Document created");

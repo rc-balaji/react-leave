@@ -68,7 +68,7 @@ export const Navbar = () => {
             Tracking
           </button>
         </li>
-        <li>
+        {/* <li>
           <button
             onClick={() => {
               navigate("/profile");
@@ -76,7 +76,7 @@ export const Navbar = () => {
           >
             Profile
           </button>
-        </li>
+        </li> */}
       </ul>
       <div className="navbar-user">
         <div className="navbar-user-info">
